@@ -6,7 +6,7 @@
     <title>首页 - 10分钟学院</title>
     <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7"/>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='index/css/style.css') }}"/>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='index/css/index.css') }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='index/css/list.css') }}"/>
 </head>
 
 <body>
@@ -31,7 +31,8 @@
 <div id="hd">
     <div class="wp">
         <div class="hdc cl">
-            <h2><a href="./" title="首页 - 10分钟学院"><img src="/static/index/images/logo.jpg" height="80" border="0"/></a></h2>
+            <h2><a href="./" title="首页 - 10分钟学院"><img src="/static/index/images/logo.jpg" height="80" border="0"/></a>
+            </h2>
             <form method="post" autocomplete="off" id="lsform" action="/">
                 <div class="fastlg cl">
                     <div class="y pns">
@@ -69,7 +70,8 @@
                                                title="10分钟学院">首页</a><span>10分钟学院</span></li>
 
                 {% for dbk in allBk %}
-                    <li id="mn_home"><a href="{{ url_for('bbs.index', cid=dbk.cid) }}" hidefocus="true" title="Space">{{ dbk.classname }}</a></li>
+                    <li id="mn_home"><a href="{{ url_for('bbs.index', cid=dbk.cid) }}" hidefocus="true"
+                                        title="Space">{{ dbk.classname }}</a></li>
 
                 {% endfor %}
 
@@ -104,130 +106,458 @@
     </div>
 </div>
 <!--HEAD end-->
-
-<!--CONTENT start-->
-<div id="wp" class="wp">
-    <div id="pt" class="bm cl">
-        <div class="z">
-            <a href="./" class="nvhm" title="首页 - 10分钟学院">首页 - 10分钟学院</a><em>&raquo;</em><a href="/">论坛</a>
-        </div>
-        <div class="z"></div>
-    </div>
-
-    <div id="ct" class="wp cl">
-        <div id="chart" class="bm bw0 cl">
-            <div class="y">
-                <p class="chart z">
-                    帖子: <em>18</em><span class="pipe">|</span>
-                    会员: <em>18</em><span class="pipe">|</span>
-                    欢迎新会员: <em>abc</em>
-                </p>
+{% if id==0 %}
+    <!--CONTENT start-->
+    <div id="wp" class="wp">
+        <div id="pt" class="bm cl">
+            <div class="z">
+                <a href="./" class="nvhm" title="首页 - 10分钟学院">首页 - 10分钟学院</a><em>&raquo;</em><a href="/">论坛</a>
             </div>
+            <div class="z"></div>
         </div>
 
-        <div class="mn">
-            <div class="fl bm">
-                <!--板块 start-->
-                {% for bk in category %}
-                    {#     parentid是0的是大版块               #}
-                    {% if bk.parentid == 0 %}
-                        <div class="bm bmw  cl">
-                            <div class="bm_h cl">
-                                <h2><a href="{{ url_for('bbs.index',cid=bk.cid) }}">{{ bk.classname }}</a></h2>
-                            </div>
-                            {% for small in smalls %}
-                                {% if small.parentid == bk.cid %}
-                                    <div id="category_1" class="bm_c">
-                                        <table cellspacing="0" cellpadding="0" class="fl_tb">
-                                            <tr>
-                                                <td class="fl_icn">
-                                                    <a href="{{ url_for('bbs.set_session',cid= small.cid ) }}"><img src="{{  url_for('static',filename='index/images/forum.gif') }}" alt="内核源码"/></a>
-                                                </td>
-                                                <td>
-                                                    <h2><a href="{{ url_for('bbs.set_session',cid= small.cid ) }}" style="color:">{{ small.classname }}</a></h2>
-                                                    <p class="xg2"></p>
-                                                    <p>版主: <span class="xi2">{{ small.compere }}</span></p>
-                                                </td>
-                                                <td class="fl_i">
-                                                    <span class="xi2">17</span><span class="xg1"> / 15</span>
-                                                </td>
-                                                <td class="fl_by">
-                                                    <div>
-                                                        <a href="detail.php?id=31" class="xi2">sfsdfsdfsd</a> <cite><span
-                                                            title="2019-06-11">1天前</span> admin</cite></div>
-                                                </td>
-                                            </tr>
+        <div id="ct" class="wp cl">
+            <div id="chart" class="bm bw0 cl">
+                <div class="y">
+                    <p class="chart z">
+                        帖子: <em>18</em><span class="pipe">|</span>
+                        会员: <em>18</em><span class="pipe">|</span>
+                        欢迎新会员: <em>abc</em>
+                    </p>
+                </div>
+            </div>
 
-                                        </table>
-                                    </div>
-                                {% endif %}
-                            {% endfor %}
+            <div class="mn">
+                <div class="fl bm">
+                    <!--板块 start-->
+
+                    {% for bk in category %}
+                        {#     parentid是0的是大版块               #}
+                        {% if bk.parentid == 0 %}
+                            <div class="bm bmw  cl">
+                                <div class="bm_h cl">
+                                    <h2><a href="{{ url_for('bbs.index',cid=bk.cid) }}">{{ bk.classname }}</a></h2>
+                                </div>
+                                {% for small in smalls %}
+                                    {% if small.parentid == bk.cid %}
+                                        <div id="category_1" class="bm_c">
+                                            <table cellspacing="0" cellpadding="0" class="fl_tb">
+                                                <tr>
+                                                    <td class="fl_icn">
+                                                        <a href="{{ url_for('bbs.index',cid=small.parentid,xid=small.cid) }}"><img
+                                                                src="/static/index/images/forum.gif"
+                                                                alt="内核源码"/></a>
+                                                    </td>
+                                                    <td>
+                                                        <h2>
+                                                            <a href="{{ url_for('bbs.index',cid=small.parentid,xid=small.cid) }}"
+                                                               style="color:">{{ small.classname }}</a></h2>
+                                                        <p class="xg2"></p>
+                                                        <p>版主: <span class="xi2">{{ small.compere }}</span></p>
+                                                    </td>
+                                                    <td class="fl_i">
+                                                        <span class="xi2">17</span><span class="xg1"> / 15</span>
+                                                    </td>
+                                                    <td class="fl_by">
+                                                        <div>
+                                                            <a href="detail.php?id=31" class="xi2">sfsdfsdfsd</a> <cite><span
+                                                                title="2019-06-11">1天前</span> admin</cite></div>
+                                                    </td>
+                                                </tr>
+
+                                            </table>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+
+                    <div class="bm bmw  cl">
+                        <div class="bm_h cl">
+                            <h2><a href="index.php?bigid=10"></a></h2>
                         </div>
-                    {% endif %}
-                {% endfor %}
-
-                <div class="bm bmw  cl">
-                    <div class="bm_h cl">
-                        <h2><a href="index.php?bigid=10"></a></h2>
+                        <div id="category_1" class="bm_c">
+                            <table cellspacing="0" cellpadding="0" class="fl_tb">
+                            </table>
+                        </div>
                     </div>
-                    <div id="category_1" class="bm_c">
-                        <table cellspacing="0" cellpadding="0" class="fl_tb">
-                        </table>
+                    <!--板块 end-->
+
+                </div>
+                <!--<div id="online" class="bm oll">
+        <div class="bm_h">
+            <h3>
+                <strong><a href="#">在线会员</a></strong>
+                <span class="xs1">- <strong>1</strong> 人在线 - <strong>1</strong> 会员(<strong>0</strong> 隐身),
+                <strong>0</strong> 位游客 - 最高记录是 <strong>4</strong> 于 <strong>2012-4-17</strong>.</span>
+            </h3>
+        </div>
+        <dl id="onlinelist" class="bm_c">
+            <dt class="ptm pbm bbda">
+                <img src="/public/images/online_admin.gif" /> 管理员 &nbsp; &nbsp; &nbsp;
+                <img src="/public/images/online_supermod.gif" /> 超级版主 &nbsp; &nbsp; &nbsp;
+                <img src="/public/images/online_moderator.gif" /> 版主 &nbsp; &nbsp; &nbsp;
+                <img src="/public/images/online_member.gif" /> 会员 &nbsp; &nbsp; &nbsp;
+            </dt>
+            <dd class="ptm pbm">
+                <ul class="cl">
+                    <li title="时间: 20:44">
+                        <img src="/public/images/online_admin.gif" alt="icon" />
+                        <a href="#">admin</a>
+                    </li>
+                </ul>
+            </dd>
+        </dl>
+    </div>-->
+                <div class="bm lk">
+                    <div id="category_lk" class="bm_c ptm">
+                        <ul class="m mbn cl">
+                            <li class="lk_logo mbm bbda cl">
+                                <img src="/static/index/images/logo_88_31.gif" border="0" alt="官方论坛"/>
+                                <div class="lk_content z">
+                                    <h5><a href="http://www.discuz.net" target="_blank">官方论坛</a></h5>
+                                    <p>提供最新 Discuz! 产品新闻、软件下载与技术交流</p>
+                                </div>
+                        </ul>
+
+                        <ul class="x mbm cl">
+                            <li><a href="http://www.baidu.com" target="_blank" title="百度">百度</a></li>
+                            <li><a href="http://www.sina.com/" target="_blank" title="漫游平台">漫游平台</a></li>
+                            <li><a href="http://www.163.com/" target="_blank" title="Yeswan">Yeswan</a></li>
+                            <li><a href="http://www.5d6d.com/" target="_blank" title="我的领地">我的领地</a></li>
+                        </ul>
                     </div>
                 </div>
-                <!--板块 end-->
+
+
             </div>
-            <!--<div id="online" class="bm oll">
-    <div class="bm_h">
-        <h3>
-            <strong><a href="#">在线会员</a></strong>
-            <span class="xs1">- <strong>1</strong> 人在线 - <strong>1</strong> 会员(<strong>0</strong> 隐身),
-            <strong>0</strong> 位游客 - 最高记录是 <strong>4</strong> 于 <strong>2012-4-17</strong>.</span>
-        </h3>
-    </div>
-    <dl id="onlinelist" class="bm_c">
-        <dt class="ptm pbm bbda">
-            <img src="/public/images/online_admin.gif" /> 管理员 &nbsp; &nbsp; &nbsp;
-            <img src="/public/images/online_supermod.gif" /> 超级版主 &nbsp; &nbsp; &nbsp;
-            <img src="/public/images/online_moderator.gif" /> 版主 &nbsp; &nbsp; &nbsp;
-            <img src="/public/images/online_member.gif" /> 会员 &nbsp; &nbsp; &nbsp;
-        </dt>
-        <dd class="ptm pbm">
-            <ul class="cl">
-                <li title="时间: 20:44">
-                    <img src="/public/images/online_admin.gif" alt="icon" />
-                    <a href="#">admin</a>
-                </li>
-            </ul>
-        </dd>
-    </dl>
-</div>-->
-            <div class="bm lk">
-                <div id="category_lk" class="bm_c ptm">
-                    <ul class="m mbn cl">
-                        <li class="lk_logo mbm bbda cl">
-                            <img src="/static/index/images/logo_88_31.gif" border="0" alt="官方论坛"/>
-                            <div class="lk_content z">
-                                <h5><a href="http://www.discuz.net" target="_blank">官方论坛</a></h5>
-                                <p>提供最新 Discuz! 产品新闻、软件下载与技术交流</p>
-                            </div>
-                    </ul>
-
-                    <ul class="x mbm cl">
-                        <li><a href="http://www.baidu.com" target="_blank" title="百度">百度</a></li>
-                        <li><a href="http://www.sina.com/" target="_blank" title="漫游平台">漫游平台</a></li>
-                        <li><a href="http://www.163.com/" target="_blank" title="Yeswan">Yeswan</a></li>
-                        <li><a href="http://www.5d6d.com/" target="_blank" title="我的领地">我的领地</a></li>
-                    </ul>
-                </div>
-            </div>
-
-
         </div>
     </div>
-</div>
-<!--CONTENT end-->
+    <!--CONTENT end-->
+{% else %}
+    <!--LIST start-->
+    <div id="wp" class="wp">
 
+        <div id="pt" class="bm cl">
+            <div class="z">
+                <a href="./" class="nvhm" title="内核源码 - 10分钟学院">内核源码 - 10分钟学院</a><em>&raquo;</em><a
+                    href="index.php">论坛</a><em>&raquo;</em>
+                
+                <a href="{{ url_for('bbs.index',cid=li[0].cid) }}">{{ li[0].classname }}</a>
+
+                <em>&raquo;</em>
+
+                <a
+                        href="{{ url_for('bbs.index',cid=li[1].parentid,xid=li[1].cid) }}">{{ li[1].classname }}</a>
+
+            </div>
+        </div>
+
+        <div class="boardnav">
+            <div id="ct" class="wp cl" style="margin-left:145px">
+                <div id="sd_bdl" class="bdl" style="width:130px;margin-left:-145px">
+                    <div class="tbn" id="forumleftside"><h2 class="bdl_h">版块导航</h2>
+                        {% for ank in allBk %}
+                            {% if ank.parentid==0 %}
+                                <dl class="a" id="lf_1">
+
+                                <dt><a href="{{ url_for('bbs.index',cid=ank.cid) }}"
+                                       title="PHP技术交流">{{ ank.classname }}</a></dt>
+                                {% for xank in smalls %}
+                                    {% if xank.parentid == ank.cid %}
+                                        <dd class="bdl_a">
+                                            <a href="{{ url_for('bbs.index',cid=xank.parentid,xid=xank.cid) }}"
+                                               title="内核源码">{{ xank.classname }}</a>
+                                        </dd>
+                                    {% endif %}
+                                {% endfor %}
+
+                                </dl>
+                                {% endif %}
+                        {% endfor %}
+                        <dl class="a" id="lf_10">
+                            <dt><a href="javascript:;" title=""></a></dt>
+                        </dl>
+                    </div>
+                </div>
+
+                <div class="mn">
+
+                    <div class="bm bml pbn">
+                        <div class="bm_h cl">
+                            <h1 class="xs2">
+                                {% for data in da %}
+                                    <a href="{{ url_for('bbs.index',cid = data.parentid,xid= data.cid ) }}">{{ data.classname }}</a>
+                                {% endfor %}
+                                <span class="xs1 xw0 i">今日: <strong class="xi1">1</strong><span
+                                        class="pipe">|</span>主题: <strong class="xi1">16</strong></span>
+                            </h1>
+                        </div>
+                        <div class="bm_c cl pbn">
+
+                            <div>
+                                版主: <span class="xi2">test001</span>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div id="pgt" class="bm bw0 pgs cl">
+                        <span class="pgb y"><a href="index.php">返&nbsp;回</a></span>
+                        <a href="addc.php?classid=5" id="newspecial" title="发新帖"><img
+                                src="/static/index/images/pn_post.png"
+                                alt="发新帖"/></a></div>
+
+                    <div id="threadlist" class="tl bm bmw">
+                        <div class="th">
+                            <table cellspacing="0" cellpadding="0">
+                                <tr>
+                                    <th colspan="2">
+                                        <div class="tf">
+                                            筛选:
+                                            <a href="list.php?classid=5" class="xi2">全部</a><span
+                                                class="pipe">|</span><a
+                                                href="list.php?classid=5&elite=1" class="xi2">精华</a>
+                                        </div>
+                                    </th>
+                                    <td class="by">作者</td>
+                                    <td class="num">回复/查看</td>
+                                    <td class="by">最后发表</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="bm_c">
+                            <form method="post" autocomplete="off" name="moderate" id="moderate"
+                                  action="">
+                                <table summary="forum_2" id="forum_2" cellspacing="0" cellpadding="0">
+                                    <tr>
+                                        <td class="icn">
+                                            <a href="detail.php?id=9" title="新窗口打开" target="_blank"><img
+                                                    src="/static/index/images/folder_common.gif"/></a>
+                                        </td>
+                                        <th class="common">
+                                            <a href="detail.php?id=9" class="xst"
+                                               style="color:red">本论坛超管的账号、密码都为admin</a>
+                                            <img src="/static/index/images/digest_1.gif" align="absmiddle"
+                                                 alt="digest"
+                                                 title="精华帖"/>
+                                        </th>
+                                        <td class="by">
+                                            <cite></cite>
+                                            <em><span class="xi1">2015-10-08</span></em>
+                                        </td>
+                                        <td class="num"><a href="detail.php?id=9" class="xi2">4</a><em>221</em>
+                                        </td>
+                                        <td class="by">
+                                            <cite>abc</cite><em><span
+                                                title="2019-06-12 21:28:17">1天前</span></em></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="icn">
+                                            <a href="detail.php?id=8" title="新窗口打开" target="_blank"><img
+                                                    src="/public/images/folder_common.gif"/></a>
+                                        </td>
+                                        <th class="common">
+                                            <a href="detail.php?id=8" class="xst"
+                                               style="color:red">关于php你可能不知道的－php的事件驱动化设计</a>
+                                            - [售价 <span class="xw1">10</span> 金钱]
+                                            <img src="/static/index/images/digest_1.gif" align="absmiddle"
+                                                 alt="digest"
+                                                 title="精华帖"/>
+                                        </th>
+                                        <td class="by">
+                                            <cite></cite>
+                                            <em><span class="xi1">2015-10-08</span></em>
+                                        </td>
+                                        <td class="num"><a href="detail.php?id=8" class="xi2">1</a><em>63</em>
+                                        </td>
+                                        <td class="by">
+                                            <cite>admin</cite><em><span
+                                                title="2019-06-05 12:01:34">2019-06-05 12:01:34</span></em>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="icn">
+                                            <a href="detail.php?id=7" title="新窗口打开" target="_blank"><img
+                                                    src="/static/index/images/folder_common.gif"/></a>
+                                        </td>
+                                        <th class="common">
+                                            <a href="detail.php?id=7" class="xst" style="color:red">树操作算法，非递归方法</a>
+                                            - [售价 <span class="xw1">5</span> 金钱]
+                                        </th>
+                                        <td class="by">
+                                            <cite></cite>
+                                            <em><span class="xi1">2015-10-08</span></em>
+                                        </td>
+                                        <td class="num"><a href="detail.php?id=7" class="xi2">1</a><em>47</em>
+                                        </td>
+                                        <td class="by">
+                                            <cite>admin</cite><em><span
+                                                title="2019-06-10 22:52:09">2019-06-10 22:52:09</span></em>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="icn">
+                                            <a href="detail.php?id=36" title="新窗口打开"
+                                               target="_blank"><img
+                                                    src="/static/index/images/folder_common.gif"/></a>
+                                        </td>
+                                        <th class="common">
+                                            <a href="detail.php?id=36" class="xst"></a>
+                                        </th>
+                                        <td class="by">
+                                            <cite>嘻嘻嘻</cite>
+                                            <em><span class="xi1">2019-06-14</span></em>
+                                        </td>
+                                        <td class="num"><a href="detail.php?id=36" class="xi2">0</a><em>4</em>
+                                        </td>
+                                        <td class="by">
+                                            <cite>嘻嘻嘻</cite><em><span
+                                                title="2019-06-14 10:11:09">6小时前</span></em></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="icn">
+                                            <a href="detail.php?id=33" title="新窗口打开"
+                                               target="_blank"><img
+                                                    src="/static/index/images/folder_common.gif"/></a>
+                                        </td>
+                                        <th class="common">
+                                            <a href="detail.php?id=33" class="xst"></a>
+                                        </th>
+                                        <td class="by">
+                                            <cite>admin</cite>
+                                            <em><span class="xi1">2019-06-12</span></em>
+                                        </td>
+                                        <td class="num"><a href="detail.php?id=33" class="xi2">0</a><em>2</em>
+                                        </td>
+                                        <td class="by">
+                                            <cite>admin</cite><em><span
+                                                title="2019-06-12 21:19:05">1天前</span></em></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="icn">
+                                            <a href="detail.php?id=32" title="新窗口打开"
+                                               target="_blank"><img
+                                                    src="/static/index/images/folder_common.gif"/></a>
+                                        </td>
+                                        <th class="common">
+                                            <a href="detail.php?id=32" class="xst">2131312313</a>
+                                        </th>
+                                        <td class="by">
+                                            <cite>admin</cite>
+                                            <em><span class="xi1">2019-06-12</span></em>
+                                        </td>
+                                        <td class="num"><a href="detail.php?id=32" class="xi2">0</a><em>6</em>
+                                        </td>
+                                        <td class="by">
+                                            <cite>admin</cite><em><span
+                                                title="2019-06-12 19:31:16">1天前</span></em></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="icn">
+                                            <a href="detail.php?id=31" title="新窗口打开"
+                                               target="_blank"><img
+                                                    src="/static/index/images/folder_common.gif"/></a>
+                                        </td>
+                                        <th class="common">
+                                            <a href="detail.php?id=31" class="xst">sfsdfsdfsd</a>
+                                        </th>
+                                        <td class="by">
+                                            <cite>admin</cite>
+                                            <em><span class="xi1">2019-06-11</span></em>
+                                        </td>
+                                        <td class="num"><a href="detail.php?id=31" class="xi2">0</a><em>53</em>
+                                        </td>
+                                        <td class="by">
+                                            <cite>admin</cite><em><span
+                                                title="2019-06-11 11:17:37">2019-06-11 11:17:37</span></em>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="icn">
+                                            <a href="detail.php?id=25" title="新窗口打开"
+                                               target="_blank"><img
+                                                    src="/static/index/images/folder_common.gif"/></a>
+                                        </td>
+                                        <th class="common">
+                                            <a href="detail.php?id=25" class="xst"></a>
+                                        </th>
+                                        <td class="by">
+                                            <cite>admin</cite>
+                                            <em><span class="xi1">2019-06-10</span></em>
+                                        </td>
+                                        <td class="num"><a href="detail.php?id=25" class="xi2">0</a><em>13</em>
+                                        </td>
+                                        <td class="by">
+                                            <cite>admin</cite><em><span
+                                                title="2019-06-10 19:04:59">2019-06-10 19:04:59</span></em>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="icn">
+                                            <a href="detail.php?id=24" title="新窗口打开"
+                                               target="_blank"><img
+                                                    src="/static/index/images/folder_common.gif"/></a>
+                                        </td>
+                                        <th class="common">
+                                            <a href="detail.php?id=24" class="xst"></a>
+                                        </th>
+                                        <td class="by">
+                                            <cite>lxn</cite>
+                                            <em><span class="xi1">2019-06-10</span></em>
+                                        </td>
+                                        <td class="num"><a href="detail.php?id=24" class="xi2">0</a><em>35</em>
+                                        </td>
+                                        <td class="by">
+                                            <cite>lxn</cite><em><span
+                                                title="2019-06-10 18:59:52">2019-06-10 18:59:52</span></em>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="icn">
+                                            <a href="detail.php?id=22" title="新窗口打开"
+                                               target="_blank"><img
+                                                    src="/static/index/images/folder_common.gif"/></a>
+                                        </td>
+                                        <th class="common">
+                                            <a href="detail.php?id=22" class="xst"></a>
+                                        </th>
+                                        <td class="by">
+                                            <cite>lxn</cite>
+                                            <em><span class="xi1">2019-06-10</span></em>
+                                        </td>
+                                        <td class="num"><a href="detail.php?id=22" class="xi2">1</a><em>9</em>
+                                        </td>
+                                        <td class="by">
+                                            <cite>lxn</cite><em><span
+                                                title="2019-06-10 17:31:42">2019-06-10 17:31:42</span></em>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="bm bw0 pgs cl">
+                        <span class="pgb y"><a href="index.php">返&nbsp;回</a></span>
+                        <a href="addc.php?classid=5" id="newspecialtmp" title="发新帖"><img
+                                src="/static/index/images/pn_post.png"
+                                alt="发新帖"/></a></div>
+                    <div style="width:800px; margin:0 auto; padding:10px 0px; text-align:right">
+                        &nbsp;&nbsp;<input type="text"
+                                           onkeydown="javascript:if(event.keyCode==13){var page=(this.value>2)?2:this.value;location='/list.php?classid=5&page='+page+''}"
+                                           value="1" style="width:25px"><input type="button" value="GO"
+                                                                               onclick="javascript:var page=(this.previousSibling.value>2)?2:this.previousSibling.value;location='/list.php?classid=5&page='+page+''">&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;<a
+                            href='/list.php?classid=5&page=2'>下一页</a>&nbsp;&nbsp;&nbsp;&nbsp;<a
+                            href='/list.php?classid=5&page=2'>尾 页</a>&nbsp;&nbsp;&nbsp;&nbsp;共有<b>16</b>条记录&nbsp;&nbsp;&nbsp;&nbsp;每页显示<b>10</b>条，本页<b>1-10</b>条&nbsp;&nbsp;&nbsp;&nbsp;<b>1/2</b>页&nbsp;&nbsp;
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--LIST end-->
+{% endif %}
 <!--FOOT start-->
 <div id="ft" class="wp cl">
     <div id="flk" class="y">
