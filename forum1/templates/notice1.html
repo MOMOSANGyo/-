@@ -1,0 +1,28 @@
+{% extends 'parentindex.html' %}
+{% block content %}
+<!--NOTICE START-->
+<div id="wp" class="wp">
+	<div id="ct" class="wp cl w">
+		<div class="nfl">
+			<div class="f_c altw">
+				<div id="messagetext" class="{$style}">
+                   {% if num==1 %}
+
+				<p>{{speak }}
+                     <br />
+				<script type="text/javascript" reload="1">setTimeout(function(){window.location.href='{{ url_for('bbs.index') }}'}, 5000);</script></p>
+				<p class="alert_btnleft"><a href="{{ url_for('bbs.index') }}">如果你的浏览器没有自动跳转，请点击此链接</a></p>
+                {% else %}
+
+				<p>{{speak }}
+                    <br />
+				<script type="text/javascript" reload="1">setTimeout(function(){window.location.href='{{ url_for('bbs.getpass') }}'}, 5000);</script></p>
+				<p class="alert_btnleft"><a href="{{ url_for('bbs.getpass') }}">如果你的浏览器没有自动跳转，请点击此链接</a></p>
+                {% endif %}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!--NOTICE END-->
+{% endblock content %}
