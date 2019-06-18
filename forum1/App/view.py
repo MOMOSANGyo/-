@@ -1,10 +1,10 @@
 import time
 
-from flask import Blueprint, render_template, sessions, session, Response, request, redirect
+from flask import Blueprint, render_template, sessions, session, Response, request, redirect,current_app
 from .VerfiCode import VerfiCode
 from App.model import *
 import hashlib
-import re
+import re,os
 
 bbs=Blueprint('bbs',__name__)
 
@@ -27,6 +27,12 @@ def index (cid=0,xid=0):
         if len(user)!=0:
             if user[0].password==passwd:
                 session['username'] = name
+                if session['username']:
+                    user = User.query.filter(User.username == session['username']).first()
+                    session['picture'] = user.picture
+                else :
+                    session['picture'] ='index/images/avatar_blank.gif'
+
 
     if xid == 0:
         if cid == 0:
@@ -71,7 +77,7 @@ def index (cid=0,xid=0):
 
 @bbs.route('/quit')
 def quit():
-    session.clear()
+    session['username']=''
     return redirect('/')
 
 @bbs.route('/yzm')
@@ -107,12 +113,15 @@ def yanzheng():
     na=User.query.filter(User.username==str(name)).all()
     ml=re.match(r'^[0-9a-zA-Z_]{0,19}@[0-9a-zA-Z]{1,13}\.[com,cn,net]{1,3}$',str(email))
     yz=session.get('yzm')
+    ip=request.remote_addr
 
     list=[]
     if len(na)!=0:
         list.append("用户名重复")
     if len(str(name))<3 or len(str(name))>12:
         list.append('用户长度不符合要求')
+    if re.match(r'^\d+$',str(mm)):
+        list.append("密码格式不能为纯数字")
     if mm != mn:
         list.append("两次输入密码不一致")
     else:
@@ -130,18 +139,18 @@ def yanzheng():
         user.email=email
         user.regtime= time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time()))
         user.lasttime = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
-        user.regip= 1
+        user.regip= str(ip)
         user.allowlogin = 0
         db.session.add(user)
         db.session.commit()
     session['zhuce']=1
-    for n in range(length):
-        print(list[n])
-    # print(yzm)
-    # print(yz)
-    # print(mm)
-    # print(mn)
-    print(length)
+    # for n in range(length):
+    #     print(list[n])
+    # # print(yzm)
+    # # print(yz)
+    # # print(mm)
+    # # print(mn)
+    # print(length)
 
 
     return render_template('notice.html',**{
@@ -205,3 +214,139 @@ def reyanzheng():
     #     'num':n,
     #     'len':length
     # })
+
+
+
+@bbs.route('/fatie')
+def fatie():
+    return render_template('fatie.html')
+
+
+
+@bbs.route('/sset')
+@bbs.route('/sset/<ss>',methods=['GET','POST'])
+def sset(ss=''):
+
+    if ss == 'touxiang':
+        user = User.query.filter(User.username == session['username']).first()
+        # print(session['username'])
+        if request.method == 'POST':
+            # 获取文件上传对象
+            obj = request.files.get('photo')
+            if obj:
+                # obj.filename 上传文件名
+                path = os.path.join(current_app.config['UPLOAD_FOLDER'], obj.filename)
+                print(path)
+                obj.save(path)
+                user = User.query.filter(User.username == session['username']).first()
+                # 相对于static的路径
+                user.picture = "upload/" + obj.filename
+                db.session.add(user)
+                db.session.commit()
+                # return "上传成功"
+
+                return render_template('sset.html', picture=user.picture)
+            # return "上传失败"
+            return render_template('sset.html', picture=user.picture)
+        # user = User.query.filter(User.username == session['username']).first()
+        print(user.picture, type(user.picture))
+
+        return render_template('sset.html', picture=user.picture,ss='touxiang')
+        # return render_template("sset.html",ss='touxiang')
+    if ss=='ziliao':
+        user = User.query.filter(User.username == session['username']).first()
+        user.realname=request.form.get('realname')
+        user.sex=request.form.get('sex')
+        user.place=request.form.get('place')
+        user.qq=request.form.get('qq')
+        db.session.add(user)
+        db.session.commit()
+        return render_template('sset.html',ss="ziliao")
+
+    if ss == 'qianming':
+        return render_template("sset.html",ss='qianming')
+    if ss == 'anquan':
+        return render_template('sset.html',ss='anquan')
+
+@bbs.route('/rereyanzheng',methods=['GET','POST'])
+def rereyanzheng():
+    old = request.form.get('oldpassword')
+    user = User.query.filter(User.username == session['username']).first()
+    mm = request.form.get('newpassword')
+    mn = request.form.get('newpassword2')
+    email = request.form.get('emailnew')
+    problem = request.form.get('questionidnew')
+    answer = request.form.get('answernew')
+    ml = re.match(r'^[0-9a-zA-Z_]{0,19}@[0-9a-zA-Z]{1,13}\.[com,cn,net]{1,3}$', str(email))
+
+    md5_obj = hashlib.md5()
+    md5_obj.update(str(old).encode('utf-8'))
+    passwd = md5_obj.hexdigest()
+
+    list = []
+    if passwd != user.password:
+        list.append("旧密码验证失败")
+    if mm != mn:
+        list.append("两次密码输入不一致")
+    if not ml:
+        list.append("邮箱格式错误")
+
+    if mm:
+
+        if re.match(r'^\d+$',str(mm)):
+            list.append("密码格式不能为纯数字")
+    else:
+        mm=old
+
+    length = len(list)
+
+    if length == 0:
+        md5_obj = hashlib.md5()
+        md5_obj.update(str(mm).encode('utf-8'))
+        passw = md5_obj.hexdigest()
+
+        user.password = passw
+        user.email = email
+        user.problem = problem
+        user.result = answer
+        print(user.result)
+        print('===============================')
+        print(user.password)
+        db.session.add(user)
+        db.session.commit()
+        return redirect('/sset/anquan')
+    else:
+        return render_template('notice2.html', **{
+            'len': length,
+            'li': list
+        })
+
+# @bbs.route('/upload',methods=['GET','POST'])
+# def upload_file():
+#     print('------------------------------------------------------------')
+#     user = User.query.filter(User.username == session['username']).first()
+#     # print(session['username'])
+#     if request.method == 'POST':
+#         # 获取文件上传对象
+#         obj = request.files.get('photo')
+#         if obj:
+#             # obj.filename 上传文件名
+#             print('------------------------------------------------------------4')
+#             path = os.path.join(current_app.config['UPLOAD_FOLDER'],obj.filename)
+#             print(path)
+#             obj.save(path)
+#             user = User.query.filter(User.username==session['username']).first()
+#             print('------------------------------------------------------------1')
+#             # 相对于static的路径
+#             user.picture = "upload/" + obj.filename
+#             print('------------------------------------------------------------2')
+#             db.session.add(user)
+#             db.session.commit()
+#             print('------------------------------------------------------------')
+#             # return "上传成功"
+#             return render_template('sset.html', picture=user.picture)
+#         # return "上传失败"
+#     # user = User.query.filter(User.username == session['username']).first()
+#     print(user.picture,type(user.picture))
+#     print('=============================================')
+#     return render_template('sset.html',picture= user.picture)

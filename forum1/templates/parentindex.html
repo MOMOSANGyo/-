@@ -1,7 +1,9 @@
 {% block doc %}
+    {% block doct %}
     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
             "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
     <html xmlns="http://www.w3.org/1999/xhtml">
+    {% endblock doct %}
     <head>
         {% block head %}
             <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
@@ -41,11 +43,11 @@
 
                     {% if session.username %}
                         <div id="um">
-                            <div class="avt y"><a href="home_tx.php"><img src="没有文件被上传！<br />"/></a></div>
+                            <div class="avt y"><a href="/sset/touxiang"><img src="{{ url_for("static",filename=session['picture']) }}"/></a></div>
                             <p>
                                 <strong class="vwmy"><a href="home.php"
                                                         target="_blank">{{ session.username }}</a></strong>
-                                <span class="pipe">|</span><a href="home.php">设置</a>
+                                <span class="pipe">|</span><a href="{{ url_for('bbs.sset',ss='ziliao') }}">设置</a>
                                 <span class="pipe">|</span><a href="admin.php" target="_blank">管理中心</a>
                                 <span class="pipe">|</span><a href="{{ url_for('bbs.quit') }}">退出</a>
                             </p>
@@ -88,7 +90,8 @@
                                             {% endif %}
 
                         </div>
-
+{% endblock header %}
+{% block sousuo %}
 
                 <div id="nv">
                     <ul>
@@ -103,7 +106,8 @@
 
                     </ul>
                 </div>
-
+    {% endblock sousuo %}
+{% block seek %}
                 <div id="scbar" class="cl">
                     <form id="scbar_form" method="get" autocomplete="off" action="search.php" target="_blank">
                         <table cellspacing="0" cellpadding="0">
@@ -133,7 +137,7 @@
                 </div>
             </div>
         </div>
-    {% endblock header %}
+    {% endblock seek %}
     {% block content %}
 
     {% endblock content %}
