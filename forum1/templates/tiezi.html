@@ -1,0 +1,228 @@
+{% extends 'parentindex.html' %}
+
+
+{% block sousuo %}
+
+                <div id="nv">
+                    <ul>
+                        <li class="a" id="mn_forum"><a href="/" hidefocus="true"
+                                                       title="10分钟学院">首页</a><span>10分钟学院</span></li>
+
+                        {% for dbk in allBk %}
+                            <li id="mn_home"><a href="{{ url_for('bbs.index', cid=dbk.cid) }}" hidefocus="true"
+                                                title="{{ dbk.classname }}">{{ dbk.classname }}</a></li>
+
+                        {% endfor %}
+
+                    </ul>
+                </div>
+    {% endblock sousuo %}
+{% block content %}
+<!--LIST start-->
+<div id="wp" class="wp">
+	<div id="pt" class="bm cl">
+		<div class="z">
+			<a href="./" class="nvhm" title="123456 - 10分钟学院">123456 - 10分钟学院</a><em>&raquo;</em><a href="/">论坛</a><em>&raquo;</em><a href="{{ url_for('bbs.index',cid=dbk.cid) }}">{{ dbk.classname }}</a><em>&raquo;</em><a href="{{ url_for('bbs.index',cid=dbk.cid,xid=xbk.cid) }}">{{ xbk.classname }}</a><em>&raquo;</em><a href="{{ url_for('bbs.tiezi',cid=dbk.cid,xid=xbk.cid,id=tie.id) }}">{{ tie.title }}</a>
+		</div>
+		<div class="z"></div>
+	</div>
+
+
+	<div id="ct" class="wp cl">
+		<div id="pgt" class="pgs mbm cl pbm bbs">
+			<div class="pgt"></div>
+			<span class="y pgb" id="visitedforums"><a href="{{ url_for('bbs.index',cid=dbk.cid,xid=xbk.cid) }}">返回列表</a></span>
+			<a id="newspecial" href="{{ url_for('bbs.fatie',cid=dbk.cid,xid=xbk.cid) }}" target="_blank" title="发新帖"><img src="/static/index/images/pn_post.png" alt="发新帖" /></a>
+			<a id="post_reply" href="#f_pst" title="回复"><img src="/static/index/images/pn_reply.png" alt="回复" /></a>
+		</div>
+				<div id="postlist" class="pl bm">
+			<!--楼主 START-->
+						<table cellspacing="0" cellpadding="0">
+				<tr>
+					<td class="pls ptm pbm">
+						<div class="hm">
+							<span class="xg1">查看:</span> <span class="xi1">2</span><span class="pipe">|</span><span class="xg1">回复:</span> <span class="xi1">0</span>
+						</div>
+					</td>
+					<td class="plc ptm pbn">
+						<div class="y">
+																					<a href="detail.php?id=87" title="下一主题"><img src="/public/images/thread-next.png" alt="下一主题" class="vm" /></a>
+													</div>
+						<h1 class="ts">
+							123456						</h1>
+					</td>
+				</tr>
+			</table>
+			<style>
+			.max_pic{max-width:120px;}
+			</style>
+			<div id="post_88">
+				<table id="pid88" cellspacing="0" cellpadding="0">
+					<tr>
+						<td class="pls" rowspan="2">
+							<div class="pi">
+								<div class="authi"><a href="#" target="_blank" class="xw1">ddd</a></div>
+							</div>
+							<!--显示用户信息 START-->
+							<div class="p_pop blk bui" id="userinfo88" style="display:none; margin-top: -11px;" onmouseout="showdpic('userinfo','88')">
+								<div class="m z">
+									<div id="userinfo88_ma"><img src="public/images/avatar_blank.gif" class="max_pic" /></div>
+								</div>
+								<div class="i y">
+								<div>
+								<strong>ddd</strong>
+								<em>当前在线</em>
+								</div>
+								<dl class="cl"><dt>注册时间</dt><dd>2019-06-17 12:42:49</dd><dt>积分</dt><dd>60</dd><dt>最后登录</dt><dd>2019-06-18 12:58:16</dd></dl>
+								<div class="imicn">
+								<a href="#" target="_blank" title="查看详细资料"><img src="/public/images/userinfo.gif" alt="查看详细资料" /></a>
+								</div>
+								<div id="avatarfeed"><span id="threadsortswait"></span></div>
+								</div>
+							</div>
+							<!--显示用户信息 END-->
+							<div>
+							<div class="avatar" onmouseover="showbpic('userinfo','88')">
+								<img src="public/images/avatar_blank.gif" class="max_pic" />
+							</div>
+							<p><em>普通用户</em></p>
+							<p><em>硕士</em></p>
+							</div>
+
+						</td>
+						<td class="plc">
+						<div class="pi">
+						<div id="fj" class="y">
+						<label class="z">电梯直达</label>
+						<input id="louceng" type="text" class="px p_fre z" size="2" title="跳转到指定楼层" />
+						<a href="javascript:;" id="fj_btn" class="z" title="跳转到指定楼层"><img src="/public/images/fj_btn.png" onclick="golouceng()" alt="跳转到指定楼层" class="vm" /></a>
+						<script>
+						function golouceng(){
+							location.href='detail.php?id=88#post_'+document.getElementById('louceng').value;
+						}
+						</script>
+						</div>
+						<strong>
+						<a href="detail.php?id=88" id="postnum4">楼主</a>
+						</strong>
+						<div class="pti">
+						<div class="pdbt">
+						</div>
+						<div class="authi">
+						<img class="authicn vm" id="authicon88" src="/public/images/online_admin.gif" />
+						<em id="authorposton88">发表于 7秒前</em>
+						<!--<span class="pipe">|</span><a href="#">只看该作者</a>-->
+						</div>
+						</div>
+						</div><div class="pct">
+						<style type="text/css">.pcb{margin-right:0}</style>
+						<div class="pcb">
+												<div class="t_fsz">
+						<table cellspacing="0" cellpadding="0">
+							<tr>
+								<td class="t_f" id="postmessage_88">
+								<p>
+	1234567</p>								</td>
+							</tr>
+						</table>
+						</div>
+												<div id="comment_88" class="cm">
+						</div>
+						<div id="post_rate_div_88"></div>
+						</div></div>
+
+						</td>
+					</tr>
+					<tr>
+						<td class="plc plm">
+
+												<div class="sign" style="max-height:100px;maxHeightIE:100px;"><p>
+	很尴尬</p></div>
+												</td>
+					</tr>
+					<tr>
+						<td class="pls"></td>
+						<td class="plc">
+							<div class="po">
+																<div class="pob cl">
+									<em>
+										<a class="fastre" href="#f_pst">回复</a>
+									</em>
+								</div>
+							</div>
+						</td>
+					</tr>
+					<tr class="ad">
+						<td class="pls"></td>
+						<td class="plc"></td>
+					</tr>
+				</table>
+			</div>
+						<!--楼主 END-->
+
+			<!--回复列表 START-->
+						<!--回复列表 END-->
+		</div>
+
+		<div class="pgs mtm mbm cl">
+			<span class="pgb y" id="visitedforumstmp">
+			<a href="{{ url_for('bbs.index',cid=dbk.cid,xid=xbk.cid) }}">返回列表</a></span>
+			<a id="newspecialtmp" href="{{ url_for('bbs.fatie',cid=dbk.cid,xid=xbk.cid) }}" target="_blank" title ="发新帖"><img src="/static/index/images/pn_post.png" alt="发新帖" /></a>
+			<a id="post_replytmp" href="#f_pst" title="回复"><img src="/static/index/images/pn_reply.png" alt="回复" /></a>
+		</div>
+		<div style="width:960px; margin:0 auto; padding:10px 0px; text-align:right">
+		&nbsp;&nbsp;<input type="text" onkeydown="javascript:if(event.keyCode==13){var page=(this.value>0)?0:this.value;location='/detail.php?id=88&page='+page+''}" value="1" style="width:25px"><input type="button" value="GO" onclick="javascript:var page=(this.previousSibling.value>0)?0:this.previousSibling.value;location='/detail.php?id=88&page='+page+''">&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;<a href='/detail.php?id=88&page=2'>下一页</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href='/detail.php?id=88&page=0'>尾 页</a>&nbsp;&nbsp;&nbsp;&nbsp;共有<b>0</b>条记录&nbsp;&nbsp;&nbsp;&nbsp;每页显示<b>10</b>条，本页<b>1-0</b>条&nbsp;&nbsp;&nbsp;&nbsp;<b>1/0</b>页&nbsp;&nbsp;		</div>
+		<!--回帖 START-->
+		<div id="f_pst" class="pl bm bmw">
+			<form method="post" autocomplete="off" id="fastpostform" action="detail.php">
+			<table cellspacing="0" cellpadding="0">
+				<tr>
+					<td class="pls">
+						<div class="avatar"><img src="/static/index/images/avatar_blank.gif" class="max_pic" /></div>
+					</td>
+					<td class="plc">
+						<span id="fastpostreturn"></span>
+						<div class="cl">
+							<div id="fastsmiliesdiv" class="y">
+									<script type="text/javascript" src="public/ckeditor/ckeditor.js"></script>
+									<script src="public/ckeditor/sample.js" type="text/javascript"></script>
+									<textarea name="message" id="editor1" class="ckeditor1"></textarea>
+									<script type="text/javascript">
+									//<![CDATA[
+
+										// Replace the <textarea id="editor"> with an CKEditor
+										// instance, using default configurations.
+										CKEDITOR.replace( 'editor1',
+											{
+												extraPlugins : 'uicolor',
+												toolbar :
+												[
+													[ 'Bold', 'Italic', '-', 'NumberedList', 'BulletedList', '-', 'Link', 'Unlink' ],
+													[ 'UIColor' ]
+												]
+											});
+
+									//]]>
+									</script><br />
+
+							</div>
+							<p class="ptm pnpost">
+								<button type="submit" name="replysubmit" id="fastpostsubmit" class="pn pnc vm" value="replysubmit" tabindex="5">
+								<strong>发表回复</strong></button>
+							</p>
+						</div>
+						<input name="id" type="hidden" value="88" />
+						<input name="classid" type="hidden" value="5" />
+					</td>
+				</tr>
+			</table>
+			</form>
+		</div>
+		<!--回帖 END-->
+	</div>
+
+
+</div>
+<!--LIST end-->
+  {% endblock content %}
+

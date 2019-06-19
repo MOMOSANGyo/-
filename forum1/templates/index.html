@@ -136,7 +136,7 @@
         <div id="pt" class="bm cl">
             <div class="z">
                 <a href="./" class="nvhm" title="内核源码 - 10分钟学院">内核源码 - 10分钟学院</a><em>&raquo;</em><a
-                    href="index.php">论坛</a><em>&raquo;</em>
+                    href="/">论坛</a><em>&raquo;</em>
 
                 <a href="{{ url_for('bbs.index',cid=li[0].cid) }}">{{ li[0].classname }}</a>
 
@@ -199,7 +199,7 @@
 
                     <div id="pgt" class="bm bw0 pgs cl">
                         <span class="pgb y"><a href="{{ url_for('bbs.index') }}">返&nbsp;回</a></span>
-                        <a href="/fatie" id="newspecial" title="发新帖"><img
+                        <a href="{{ url_for('bbs.fatie',cid=li[0].cid,xid=li[1].cid)}}" id="newspecial" title="发新帖"><img
                                 src="/static/index/images/pn_post.png"
                                 alt="发新帖"/></a></div>
 
@@ -210,7 +210,7 @@
                                     <th colspan="2">
                                         <div class="tf">
                                             筛选:
-                                            <a href="list.php?classid=5" class="xi2">全部</a><span
+                                            <a href="/" class="xi2">全部</a><span
                                                 class="pipe">|</span><a
                                                 href="list.php?classid=5&elite=1" class="xi2">精华</a>
                                         </div>
@@ -225,6 +225,11 @@
                             <form method="post" autocomplete="off" name="moderate" id="moderate"
                                   action="">
                                 <table summary="forum_2" id="forum_2" cellspacing="0" cellpadding="0">
+
+                                    {% for p in ppost %}
+                                        {% if p.classid == li[1].cid%}
+
+
                                     <tr>
                                         <td class="icn">
                                             <a href="detail.php?id=9" title="新窗口打开" target="_blank"><img
@@ -232,201 +237,208 @@
                                         </td>
                                         <th class="common">
                                             <a href="detail.php?id=9" class="xst"
-                                               style="color:red">本论坛超管的账号、密码都为admin</a>
+                                               style="color:red">{{ p.title }}</a>
                                             <img src="/static/index/images/digest_1.gif" align="absmiddle"
                                                  alt="digest"
                                                  title="精华帖"/>
                                         </th>
                                         <td class="by">
-                                            <cite></cite>
-                                            <em><span class="xi1">2015-10-08</span></em>
+{#                                            作者#}
+                                            {% for u in user1 %}
+                                                {% if u.uid==p.authorid %}
+                                                <cite>{{ u.username }}</cite>
+                                                {% endif %}
+                                            {% endfor %}
+                                            <em><span class="xi1">{{ p.addtime }}</span></em>
                                         </td>
-                                        <td class="num"><a href="detail.php?id=9" class="xi2">4</a><em>221</em>
+                                        <td class="num"><a href="detail.php?id=9" class="xi2">{{ p.replycount }}</a><em>221</em>
                                         </td>
                                         <td class="by">
                                             <cite>abc</cite><em><span
-                                                title="2019-06-12 21:28:17">1天前</span></em></td>
+                                                title="2019-06-12 21:28:17">时间</span></em></td>
                                     </tr>
-                                    <tr>
-                                        <td class="icn">
-                                            <a href="detail.php?id=8" title="新窗口打开" target="_blank"><img
-                                                    src="/public/images/folder_common.gif"/></a>
-                                        </td>
-                                        <th class="common">
-                                            <a href="detail.php?id=8" class="xst"
-                                               style="color:red">关于php你可能不知道的－php的事件驱动化设计</a>
-                                            - [售价 <span class="xw1">10</span> 金钱]
-                                            <img src="/static/index/images/digest_1.gif" align="absmiddle"
-                                                 alt="digest"
-                                                 title="精华帖"/>
-                                        </th>
-                                        <td class="by">
-                                            <cite></cite>
-                                            <em><span class="xi1">2015-10-08</span></em>
-                                        </td>
-                                        <td class="num"><a href="detail.php?id=8" class="xi2">1</a><em>63</em>
-                                        </td>
-                                        <td class="by">
-                                            <cite>admin</cite><em><span
-                                                title="2019-06-05 12:01:34">2019-06-05 12:01:34</span></em>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="icn">
-                                            <a href="detail.php?id=7" title="新窗口打开" target="_blank"><img
-                                                    src="/static/index/images/folder_common.gif"/></a>
-                                        </td>
-                                        <th class="common">
-                                            <a href="detail.php?id=7" class="xst" style="color:red">树操作算法，非递归方法</a>
-                                            - [售价 <span class="xw1">5</span> 金钱]
-                                        </th>
-                                        <td class="by">
-                                            <cite></cite>
-                                            <em><span class="xi1">2015-10-08</span></em>
-                                        </td>
-                                        <td class="num"><a href="detail.php?id=7" class="xi2">1</a><em>47</em>
-                                        </td>
-                                        <td class="by">
-                                            <cite>admin</cite><em><span
-                                                title="2019-06-10 22:52:09">2019-06-10 22:52:09</span></em>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="icn">
-                                            <a href="detail.php?id=36" title="新窗口打开"
-                                               target="_blank"><img
-                                                    src="/static/index/images/folder_common.gif"/></a>
-                                        </td>
-                                        <th class="common">
-                                            <a href="detail.php?id=36" class="xst"></a>
-                                        </th>
-                                        <td class="by">
-                                            <cite>嘻嘻嘻</cite>
-                                            <em><span class="xi1">2019-06-14</span></em>
-                                        </td>
-                                        <td class="num"><a href="detail.php?id=36" class="xi2">0</a><em>4</em>
-                                        </td>
-                                        <td class="by">
-                                            <cite>嘻嘻嘻</cite><em><span
-                                                title="2019-06-14 10:11:09">6小时前</span></em></td>
-                                    </tr>
-                                    <tr>
-                                        <td class="icn">
-                                            <a href="detail.php?id=33" title="新窗口打开"
-                                               target="_blank"><img
-                                                    src="/static/index/images/folder_common.gif"/></a>
-                                        </td>
-                                        <th class="common">
-                                            <a href="detail.php?id=33" class="xst"></a>
-                                        </th>
-                                        <td class="by">
-                                            <cite>admin</cite>
-                                            <em><span class="xi1">2019-06-12</span></em>
-                                        </td>
-                                        <td class="num"><a href="detail.php?id=33" class="xi2">0</a><em>2</em>
-                                        </td>
-                                        <td class="by">
-                                            <cite>admin</cite><em><span
-                                                title="2019-06-12 21:19:05">1天前</span></em></td>
-                                    </tr>
-                                    <tr>
-                                        <td class="icn">
-                                            <a href="detail.php?id=32" title="新窗口打开"
-                                               target="_blank"><img
-                                                    src="/static/index/images/folder_common.gif"/></a>
-                                        </td>
-                                        <th class="common">
-                                            <a href="detail.php?id=32" class="xst">2131312313</a>
-                                        </th>
-                                        <td class="by">
-                                            <cite>admin</cite>
-                                            <em><span class="xi1">2019-06-12</span></em>
-                                        </td>
-                                        <td class="num"><a href="detail.php?id=32" class="xi2">0</a><em>6</em>
-                                        </td>
-                                        <td class="by">
-                                            <cite>admin</cite><em><span
-                                                title="2019-06-12 19:31:16">1天前</span></em></td>
-                                    </tr>
-                                    <tr>
-                                        <td class="icn">
-                                            <a href="detail.php?id=31" title="新窗口打开"
-                                               target="_blank"><img
-                                                    src="/static/index/images/folder_common.gif"/></a>
-                                        </td>
-                                        <th class="common">
-                                            <a href="detail.php?id=31" class="xst">sfsdfsdfsd</a>
-                                        </th>
-                                        <td class="by">
-                                            <cite>admin</cite>
-                                            <em><span class="xi1">2019-06-11</span></em>
-                                        </td>
-                                        <td class="num"><a href="detail.php?id=31" class="xi2">0</a><em>53</em>
-                                        </td>
-                                        <td class="by">
-                                            <cite>admin</cite><em><span
-                                                title="2019-06-11 11:17:37">2019-06-11 11:17:37</span></em>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="icn">
-                                            <a href="detail.php?id=25" title="新窗口打开"
-                                               target="_blank"><img
-                                                    src="/static/index/images/folder_common.gif"/></a>
-                                        </td>
-                                        <th class="common">
-                                            <a href="detail.php?id=25" class="xst"></a>
-                                        </th>
-                                        <td class="by">
-                                            <cite>admin</cite>
-                                            <em><span class="xi1">2019-06-10</span></em>
-                                        </td>
-                                        <td class="num"><a href="detail.php?id=25" class="xi2">0</a><em>13</em>
-                                        </td>
-                                        <td class="by">
-                                            <cite>admin</cite><em><span
-                                                title="2019-06-10 19:04:59">2019-06-10 19:04:59</span></em>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="icn">
-                                            <a href="detail.php?id=24" title="新窗口打开"
-                                               target="_blank"><img
-                                                    src="/static/index/images/folder_common.gif"/></a>
-                                        </td>
-                                        <th class="common">
-                                            <a href="detail.php?id=24" class="xst"></a>
-                                        </th>
-                                        <td class="by">
-                                            <cite>lxn</cite>
-                                            <em><span class="xi1">2019-06-10</span></em>
-                                        </td>
-                                        <td class="num"><a href="detail.php?id=24" class="xi2">0</a><em>35</em>
-                                        </td>
-                                        <td class="by">
-                                            <cite>lxn</cite><em><span
-                                                title="2019-06-10 18:59:52">2019-06-10 18:59:52</span></em>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="icn">
-                                            <a href="detail.php?id=22" title="新窗口打开"
-                                               target="_blank"><img
-                                                    src="/static/index/images/folder_common.gif"/></a>
-                                        </td>
-                                        <th class="common">
-                                            <a href="detail.php?id=22" class="xst"></a>
-                                        </th>
-                                        <td class="by">
-                                            <cite>lxn</cite>
-                                            <em><span class="xi1">2019-06-10</span></em>
-                                        </td>
-                                        <td class="num"><a href="detail.php?id=22" class="xi2">1</a><em>9</em>
-                                        </td>
-                                        <td class="by">
-                                            <cite>lxn</cite><em><span
-                                                title="2019-06-10 17:31:42">2019-06-10 17:31:42</span></em>
-                                        </td>
+                                        {% endif %}
+                                    {% endfor %}
+{#                                    <tr>#}
+{#                                        <td class="icn">#}
+{#                                            <a href="detail.php?id=8" title="新窗口打开" target="_blank"><img#}
+{#                                                    src="/public/images/folder_common.gif"/></a>#}
+{#                                        </td>#}
+{#                                        <th class="common">#}
+{#                                            <a href="detail.php?id=8" class="xst"#}
+{#                                               style="color:red">关于php你可能不知道的－php的事件驱动化设计</a>#}
+{#                                            - [售价 <span class="xw1">10</span> 金钱]#}
+{#                                            <img src="/static/index/images/digest_1.gif" align="absmiddle"#}
+{#                                                 alt="digest"#}
+{#                                                 title="精华帖"/>#}
+{#                                        </th>#}
+{#                                        <td class="by">#}
+{#                                            <cite></cite>#}
+{#                                            <em><span class="xi1">2015-10-08</span></em>#}
+{#                                        </td>#}
+{#                                        <td class="num"><a href="detail.php?id=8" class="xi2">1</a><em>63</em>#}
+{#                                        </td>#}
+{#                                        <td class="by">#}
+{#                                            <cite>admin</cite><em><span#}
+{#                                                title="2019-06-05 12:01:34">2019-06-05 12:01:34</span></em>#}
+{#                                        </td>#}
+{#                                    </tr>#}
+{#                                    <tr>#}
+{#                                        <td class="icn">#}
+{#                                            <a href="detail.php?id=7" title="新窗口打开" target="_blank"><img#}
+{#                                                    src="/static/index/images/folder_common.gif"/></a>#}
+{#                                        </td>#}
+{#                                        <th class="common">#}
+{#                                            <a href="detail.php?id=7" class="xst" style="color:red">树操作算法，非递归方法</a>#}
+{#                                            - [售价 <span class="xw1">5</span> 金钱]#}
+{#                                        </th>#}
+{#                                        <td class="by">#}
+{#                                            <cite></cite>#}
+{#                                            <em><span class="xi1">2015-10-08</span></em>#}
+{#                                        </td>#}
+{#                                        <td class="num"><a href="detail.php?id=7" class="xi2">1</a><em>47</em>#}
+{#                                        </td>#}
+{#                                        <td class="by">#}
+{#                                            <cite>admin</cite><em><span#}
+{#                                                title="2019-06-10 22:52:09">2019-06-10 22:52:09</span></em>#}
+{#                                        </td>#}
+{#                                    </tr>#}
+{#                                    <tr>#}
+{#                                        <td class="icn">#}
+{#                                            <a href="detail.php?id=36" title="新窗口打开"#}
+{#                                               target="_blank"><img#}
+{#                                                    src="/static/index/images/folder_common.gif"/></a>#}
+{#                                        </td>#}
+{#                                        <th class="common">#}
+{#                                            <a href="detail.php?id=36" class="xst"></a>#}
+{#                                        </th>#}
+{#                                        <td class="by">#}
+{#                                            <cite>嘻嘻嘻</cite>#}
+{#                                            <em><span class="xi1">2019-06-14</span></em>#}
+{#                                        </td>#}
+{#                                        <td class="num"><a href="detail.php?id=36" class="xi2">0</a><em>4</em>#}
+{#                                        </td>#}
+{#                                        <td class="by">#}
+{#                                            <cite>嘻嘻嘻</cite><em><span#}
+{#                                                title="2019-06-14 10:11:09">6小时前</span></em></td>#}
+{#                                    </tr>#}
+{#                                    <tr>#}
+{#                                        <td class="icn">#}
+{#                                            <a href="detail.php?id=33" title="新窗口打开"#}
+{#                                               target="_blank"><img#}
+{#                                                    src="/static/index/images/folder_common.gif"/></a>#}
+{#                                        </td>#}
+{#                                        <th class="common">#}
+{#                                            <a href="detail.php?id=33" class="xst"></a>#}
+{#                                        </th>#}
+{#                                        <td class="by">#}
+{#                                            <cite>admin</cite>#}
+{#                                            <em><span class="xi1">2019-06-12</span></em>#}
+{#                                        </td>#}
+{#                                        <td class="num"><a href="detail.php?id=33" class="xi2">0</a><em>2</em>#}
+{#                                        </td>#}
+{#                                        <td class="by">#}
+{#                                            <cite>admin</cite><em><span#}
+{#                                                title="2019-06-12 21:19:05">1天前</span></em></td>#}
+{#                                    </tr>#}
+{#                                    <tr>#}
+{#                                        <td class="icn">#}
+{#                                            <a href="detail.php?id=32" title="新窗口打开"#}
+{#                                               target="_blank"><img#}
+{#                                                    src="/static/index/images/folder_common.gif"/></a>#}
+{#                                        </td>#}
+{#                                        <th class="common">#}
+{#                                            <a href="detail.php?id=32" class="xst">2131312313</a>#}
+{#                                        </th>#}
+{#                                        <td class="by">#}
+{#                                            <cite>admin</cite>#}
+{#                                            <em><span class="xi1">2019-06-12</span></em>#}
+{#                                        </td>#}
+{#                                        <td class="num"><a href="detail.php?id=32" class="xi2">0</a><em>6</em>#}
+{#                                        </td>#}
+{#                                        <td class="by">#}
+{#                                            <cite>admin</cite><em><span#}
+{#                                                title="2019-06-12 19:31:16">1天前</span></em></td>#}
+{#                                    </tr>#}
+{#                                    <tr>#}
+{#                                        <td class="icn">#}
+{#                                            <a href="detail.php?id=31" title="新窗口打开"#}
+{#                                               target="_blank"><img#}
+{#                                                    src="/static/index/images/folder_common.gif"/></a>#}
+{#                                        </td>#}
+{#                                        <th class="common">#}
+{#                                            <a href="detail.php?id=31" class="xst">sfsdfsdfsd</a>#}
+{#                                        </th>#}
+{#                                        <td class="by">#}
+{#                                            <cite>admin</cite>#}
+{#                                            <em><span class="xi1">2019-06-11</span></em>#}
+{#                                        </td>#}
+{#                                        <td class="num"><a href="detail.php?id=31" class="xi2">0</a><em>53</em>#}
+{#                                        </td>#}
+{#                                        <td class="by">#}
+{#                                            <cite>admin</cite><em><span#}
+{#                                                title="2019-06-11 11:17:37">2019-06-11 11:17:37</span></em>#}
+{#                                        </td>#}
+{#                                    </tr>#}
+{#                                    <tr>#}
+{#                                        <td class="icn">#}
+{#                                            <a href="detail.php?id=25" title="新窗口打开"#}
+{#                                               target="_blank"><img#}
+{#                                                    src="/static/index/images/folder_common.gif"/></a>#}
+{#                                        </td>#}
+{#                                        <th class="common">#}
+{#                                            <a href="detail.php?id=25" class="xst"></a>#}
+{#                                        </th>#}
+{#                                        <td class="by">#}
+{#                                            <cite>admin</cite>#}
+{#                                            <em><span class="xi1">2019-06-10</span></em>#}
+{#                                        </td>#}
+{#                                        <td class="num"><a href="detail.php?id=25" class="xi2">0</a><em>13</em>#}
+{#                                        </td>#}
+{#                                        <td class="by">#}
+{#                                            <cite>admin</cite><em><span#}
+{#                                                title="2019-06-10 19:04:59">2019-06-10 19:04:59</span></em>#}
+{#                                        </td>#}
+{#                                    </tr>#}
+{#                                    <tr>#}
+{#                                        <td class="icn">#}
+{#                                            <a href="detail.php?id=24" title="新窗口打开"#}
+{#                                               target="_blank"><img#}
+{#                                                    src="/static/index/images/folder_common.gif"/></a>#}
+{#                                        </td>#}
+{#                                        <th class="common">#}
+{#                                            <a href="detail.php?id=24" class="xst"></a>#}
+{#                                        </th>#}
+{#                                        <td class="by">#}
+{#                                            <cite>lxn</cite>#}
+{#                                            <em><span class="xi1">2019-06-10</span></em>#}
+{#                                        </td>#}
+{#                                        <td class="num"><a href="detail.php?id=24" class="xi2">0</a><em>35</em>#}
+{#                                        </td>#}
+{#                                        <td class="by">#}
+{#                                            <cite>lxn</cite><em><span#}
+{#                                                title="2019-06-10 18:59:52">2019-06-10 18:59:52</span></em>#}
+{#                                        </td>#}
+{#                                    </tr>#}
+{#                                    <tr>#}
+{#                                        <td class="icn">#}
+{#                                            <a href="detail.php?id=22" title="新窗口打开"#}
+{#                                               target="_blank"><img#}
+{#                                                    src="/static/index/images/folder_common.gif"/></a>#}
+{#                                        </td>#}
+{#                                        <th class="common">#}
+{#                                            <a href="detail.php?id=22" class="xst"></a>#}
+{#                                        </th>#}
+{#                                        <td class="by">#}
+{#                                            <cite>lxn</cite>#}
+{#                                            <em><span class="xi1">2019-06-10</span></em>#}
+{#                                        </td>#}
+{#                                        <td class="num"><a href="detail.php?id=22" class="xi2">1</a><em>9</em>#}
+{#                                        </td>#}
+{#                                        <td class="by">#}
+{#                                            <cite>lxn</cite><em><span#}
+{#                                                title="2019-06-10 17:31:42">2019-06-10 17:31:42</span></em>#}
+{#                                        </td>#}
                                     </tr>
                                 </table>
                             </form>
@@ -434,8 +446,8 @@
                     </div>
 
                     <div class="bm bw0 pgs cl">
-                        <span class="pgb y"><a href="index.php">返&nbsp;回</a></span>
-                        <a href="/fatie" id="newspecialtmp" title="发新帖"><img
+                        <span class="pgb y"><a href="/">返&nbsp;回</a></span>
+                        <a href="{{ url_for('bbs.fatie',cid=li[0].cid,xid=li[1].cid)}}" id="newspecialtmp" title="发新帖"><img
                                 src="/static/index/images/pn_post.png"
                                 alt="发新帖"/></a></div>
                     <div style="width:800px; margin:0 auto; padding:10px 0px; text-align:right">

@@ -23,6 +23,7 @@ def index (cid=0,xid=0):
     md5_obj.update(str(mm).encode('utf-8'))
     passwd = md5_obj.hexdigest()
 
+
     if passwd:
         if len(user)!=0:
             if user[0].password==passwd:
@@ -33,6 +34,8 @@ def index (cid=0,xid=0):
                 else :
                     session['picture'] ='index/images/avatar_blank.gif'
 
+    post=Detail_t.query.all()
+    user1=User.query.all()
 
     if xid == 0:
         if cid == 0:
@@ -48,7 +51,9 @@ def index (cid=0,xid=0):
             'allBk': allBk,
             'smalls': smallbz,
             'iid':cid,
-            'id':xid
+            'id':xid,
+            'ppost':post,
+            'user1':user1
         })
     else :
 
@@ -72,7 +77,9 @@ def index (cid=0,xid=0):
             'da':data,
             'iid':cid,
             'id':xid,
-            'li':list
+            'li':list,
+            'ppost': post,
+            'user1':user1
         })
 
 @bbs.route('/quit')
@@ -94,7 +101,11 @@ def yzm():
 
 @bbs.route('/register')
 def zhuce():
-    return render_template('zhuce.html')
+    allBK = Category.query.filter(Category.parentid == 0).all()
+
+    return render_template('zhuce.html',**{
+                    'allBk': allBK
+                })
 
 
 @bbs.route('/yanzheng',methods=['GET','POST'])
@@ -152,10 +163,11 @@ def yanzheng():
     # # print(mn)
     # print(length)
 
-
+    allBK = Category.query.filter(Category.parentid == 0).all()
     return render_template('notice.html',**{
         'li':list,
-        'len':length
+        'len':length,
+        'allBk': allBK
     })
 
 
@@ -167,7 +179,10 @@ def yanzheng():
 
 @bbs.route('/getpass')
 def getpass():
-    return render_template('getpass.html')
+    allBK = Category.query.filter(Category.parentid == 0).all()
+    return render_template('getpass.html',**{
+                    'allBk': allBK
+                })
 
 @bbs.route('/reyanzheng',methods=['GET','POST'])
 def reyanzheng():
@@ -188,10 +203,11 @@ def reyanzheng():
     else:
         title = "查询不到用户信息，请查看输入是否有误"
         n=0
-
+    allBK = Category.query.filter(Category.parentid == 0).all()
     return render_template('notice1.html',**{
         'speak':title,
-        'num':n
+        'num':n,
+        'allBk': allBK
     })
     # list=[]
     # n=0
@@ -215,17 +231,9 @@ def reyanzheng():
     #     'len':length
     # })
 
-
-
-@bbs.route('/fatie')
-def fatie():
-    return render_template('fatie.html')
-
-
-
-@bbs.route('/sset')
 @bbs.route('/sset/<ss>',methods=['GET','POST'])
 def sset(ss=''):
+    allBK = Category.query.filter(Category.parentid == 0).all()
 
     if ss == 'touxiang':
         user = User.query.filter(User.username == session['username']).first()
@@ -245,28 +253,49 @@ def sset(ss=''):
                 db.session.commit()
                 # return "上传成功"
 
-                return render_template('sset.html', picture=user.picture)
+                return render_template('sset.html', picture=user.picture,**{
+                    'allBk': allBK
+                })
             # return "上传失败"
-            return render_template('sset.html', picture=user.picture)
+            return render_template('sset.html', picture=user.picture,**{
+                    'allBk': allBK
+                })
         # user = User.query.filter(User.username == session['username']).first()
-        print(user.picture, type(user.picture))
 
-        return render_template('sset.html', picture=user.picture,ss='touxiang')
+
+        return render_template('sset.html', picture=user.picture,ss='touxiang',**{
+                    'allBk': allBK
+                })
         # return render_template("sset.html",ss='touxiang')
     if ss=='ziliao':
+        year =request.form.get('birthyear')
+        month =year =request.form.get('birthmonth')
+        day =year =request.form.get('birthday')
         user = User.query.filter(User.username == session['username']).first()
         user.realname=request.form.get('realname')
         user.sex=request.form.get('sex')
         user.place=request.form.get('place')
         user.qq=request.form.get('qq')
+        user.birthday=str(year)+str(month)+str(day)
         db.session.add(user)
         db.session.commit()
-        return render_template('sset.html',ss="ziliao")
+        return render_template('sset.html',ss="ziliao",**{
+                    'allBk': allBK
+                })
 
     if ss == 'qianming':
-        return render_template("sset.html",ss='qianming')
+        qm=request.form.get('content')
+        user = User.query.filter(User.username == session['username']).first()
+        user.autograph=qm
+        db.session.add(user)
+        db.session.commit()
+        return render_template("sset.html",ss='qianming',**{
+                    'allBk': allBK
+                })
     if ss == 'anquan':
-        return render_template('sset.html',ss='anquan')
+        return render_template('sset.html',ss='anquan',**{
+                    'allBk': allBK
+                })
 
 @bbs.route('/rereyanzheng',methods=['GET','POST'])
 def rereyanzheng():
@@ -299,7 +328,7 @@ def rereyanzheng():
         mm=old
 
     length = len(list)
-
+    allBK = Category.query.filter(Category.parentid == 0).all()
     if length == 0:
         md5_obj = hashlib.md5()
         md5_obj.update(str(mm).encode('utf-8'))
@@ -309,44 +338,71 @@ def rereyanzheng():
         user.email = email
         user.problem = problem
         user.result = answer
-        print(user.result)
-        print('===============================')
-        print(user.password)
+
         db.session.add(user)
         db.session.commit()
         return redirect('/sset/anquan')
     else:
         return render_template('notice2.html', **{
             'len': length,
-            'li': list
+            'li': list,
+            'allBk': allBK
         })
 
-# @bbs.route('/upload',methods=['GET','POST'])
-# def upload_file():
-#     print('------------------------------------------------------------')
-#     user = User.query.filter(User.username == session['username']).first()
-#     # print(session['username'])
-#     if request.method == 'POST':
-#         # 获取文件上传对象
-#         obj = request.files.get('photo')
-#         if obj:
-#             # obj.filename 上传文件名
-#             print('------------------------------------------------------------4')
-#             path = os.path.join(current_app.config['UPLOAD_FOLDER'],obj.filename)
-#             print(path)
-#             obj.save(path)
-#             user = User.query.filter(User.username==session['username']).first()
-#             print('------------------------------------------------------------1')
-#             # 相对于static的路径
-#             user.picture = "upload/" + obj.filename
-#             print('------------------------------------------------------------2')
-#             db.session.add(user)
-#             db.session.commit()
-#             print('------------------------------------------------------------')
-#             # return "上传成功"
-#             return render_template('sset.html', picture=user.picture)
-#         # return "上传失败"
-#     # user = User.query.filter(User.username == session['username']).first()
-#     print(user.picture,type(user.picture))
-#     print('=============================================')
-#     return render_template('sset.html',picture= user.picture)
+@bbs.route('/fatie/<int:cid>/<int:xid>',methods=['GET','POST'])
+def fatie(cid,xid):
+    # cid 大板块id
+    # xid 小板块id
+    allBK = Category.query.filter(Category.parentid == 0).all()
+    dbk = Category.query.filter(Category.cid == cid).first()
+    xbk = Category.query.filter(Category.cid == xid).first()
+
+    return render_template('fatie.html',**{
+        'allBk': allBK,
+        'dbk':dbk,
+        'xbk':xbk
+                })
+@bbs.route('/p_post/<int:cid>/<int:xid>',methods=['GET','POST'])
+def p_post(cid,xid):
+    allBK = Category.query.filter(Category.parentid == 0).all()
+    dbk = Category.query.filter(Category.cid == cid).first()
+    xbk = Category.query.filter(Category.cid == xid).first()
+    subject = request.form.get('subject')
+    content = request.form.get('content')
+    user = User.query.filter(User.username == session['username']).first()
+    d = Detail_t(
+        authorid=user.uid,
+        title=subject,
+        content=content,
+        addtime=time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())).split(' ')[0],
+        addip=user.regip,
+        classid=xbk.cid
+    )
+    db.session.add(d)
+    db.session.commit()
+    dd=Detail_t.query.order_by(-Detail_t.id).first().id
+    return redirect('/tiezi/{}/{}/{}'.format(dbk.cid,xbk.cid,dd))
+    # return render_template('tiezi.html',**{
+    #     'allBk': allBK,
+    #     'dbk':dbk,
+    #     'xbk':xbk,
+    #     'dd':dd
+    #             })
+    # return redirect('/fatie/{}/{}'.format(dbk.cid,xbk.cid)) #改成帖子内部
+
+@bbs.route('/tiezi/<int:cid>/<int:xid>/<int:id>')
+def tiezi(cid,xid,id):
+    # cid:大板块id
+    # xid:小板块id
+    # id:帖子id
+    allBK = Category.query.filter(Category.parentid == 0).all()
+    dbk = Category.query.filter(Category.cid == cid).first()
+    xbk = Category.query.filter(Category.cid == xid).first()
+    tie = Detail_t.query.filter(Detail_t.id == id).first()
+
+    return render_template('tiezi.html',**{
+        'allBk': allBK,
+        'dbk':dbk,
+        'xbk':xbk,
+        'tie':tie
+                })

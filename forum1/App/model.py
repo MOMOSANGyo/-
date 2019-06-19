@@ -36,5 +36,23 @@ class User(db.Model):
     allowlogin = db.Column(db.SmallInteger,nullable=False)
     __tablename__ = 'bbs_user'
 
-# class Closeip(db.Model):
-#     id =
+class Detail_t(db.Model):
+    id = db.Column(db.Integer,primary_key=True)
+    tid = db.Column(db.Integer,nullable=False)
+    authorid = db.Column(db.Integer,nullable=False)
+    title = db.Column(db.String(600),nullable=False)
+    content = db.Column(db.String(1000),nullable=False)
+    addtime = db.Column(db.Integer,nullable=False)
+    addip = db.Column(db.String(12),nullable=False)
+    classid = db.Column(db.Integer,nullable=False)
+    replycount = db.Column(db.Integer)
+    hits = db.Column(db.Integer)
+    lstop = db.Column(db.SmallInteger)
+    elite = db.Column(db.SmallInteger)
+    ishot = db.Column(db.SmallInteger)
+    rate = db.Column(db.SmallInteger)
+    attchment = db.Column(db.SmallInteger)
+    isdel = db.Column(db.Integer)
+    style = db.Column(db.String(10))
+    Isdisplay = db.Column(db.Integer)
+    __tablename__ = 'bbs_details_t'
