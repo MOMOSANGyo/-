@@ -19,6 +19,9 @@ patch_request_class(app,size=None)
 from App.view import bbs
 app.register_blueprint(bbs)
 
+from Admin.admin_view import admin
+app.register_blueprint(admin)
+
 
 app.config['SQLALCHEMY_DATABASE_URI']="mysql+pymysql://root:123456@127.0.0.1:3306/bbs"
 db.init_app(app)

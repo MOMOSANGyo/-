@@ -45,16 +45,33 @@
                     {% if session.username %}
                         <div id="um">
                             <div class="avt y"><a href="/sset/touxiang"><img src="{{ url_for("static",filename=session['picture']) }}"/></a></div>
-                            <p>
+                          {% if session['udertype']==1 %}
+                        <p>
                                 <strong class="vwmy"><a href="home.php"
                                                         target="_blank">{{ session.username }}</a></strong>
                                 <span class="pipe">|</span><a href="{{ url_for('bbs.sset',ss='ziliao') }}">设置</a>
-                                <span class="pipe">|</span><a href="admin.php" target="_blank">管理中心</a>
+
+                                <span class="pipe">|</span><a href="{{ url_for('admin.login') }}" target="_blank">管理中心</a>
+
                                 <span class="pipe">|</span><a href="{{ url_for('bbs.quit') }}">退出</a>
                             </p>
                             <p>
-                                <a id="extcreditmenu" href="#">积分: 29</a>
+                                <a id="extcreditmenu" href="#">积分: {{ session.grade }}</a>
                                 <span class="pipe">|</span>用户权限: 管理员 </p>
+                                    {% elif session['udertype']!=1 %}
+                              <p>
+                              <strong class="vwmy"><a href="home.php"
+                                                        target="_blank">{{ session.username }}</a></strong>
+                                <span class="pipe">|</span><a href="{{ url_for('bbs.sset',ss='ziliao') }}">设置</a>
+
+{#                                <span class="pipe">|</span><a href="admin.php" target="_blank">管理中心</a>#}
+
+                                <span class="pipe">|</span><a href="{{ url_for('bbs.quit') }}">退出</a>
+                            </p>
+                            <p>
+                                <a id="extcreditmenu" href="#">积分: {{ session.grade }}</a>
+                                <span class="pipe">|</span>用户权限: 普通用户 </p>
+                                    {% endif %}
                         </div>
                     {% else %}
                         <form method="get" autocomplete="off" id="lsform" action="/">
@@ -157,8 +174,9 @@
                 <p class="xs0">&copy; 2019 <a href="http://www.phpxy.com/" target="_blank">phpxy Inc.</a></p>
             </div>
         </div>
-    {% endblock footer %}
-    </body>
-    </html>
 
+
+    {% endblock footer %}
+</body>
+    </html>
 {% endblock doc %}

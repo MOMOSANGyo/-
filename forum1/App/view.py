@@ -1,6 +1,7 @@
+import datetime
 import time
 
-from flask import Blueprint, render_template, sessions, session, Response, request, redirect,current_app
+from flask import Blueprint, render_template, sessions, session, Response, request, redirect, current_app, url_for
 from .VerfiCode import VerfiCode
 from App.model import *
 import hashlib
@@ -8,13 +9,26 @@ import re,os
 
 bbs=Blueprint('bbs',__name__)
 
+# @bbs.before_request
+# def is_login():
+#     if request.path.rstrip('/')=='/':
+#         return
+#     elif not session.get('username'):
+#         return redirect(url_for('index'))
+
 # @bbs.route('/')
 # def index():
 #     return render_template('index.html')
+
+allowlogin={}
+allownum=0
+
 @bbs.route('/')
 @bbs.route('/<int:cid>')
 @bbs.route('/<int:cid>/<int:xid>')#php技术交流/程序人生
 def index (cid=0,xid=0):
+
+
     name=request.args.get('username')
     mm=request.args.get('password')
     user=User.query.filter(User.username==name).all()
@@ -22,20 +36,73 @@ def index (cid=0,xid=0):
     md5_obj = hashlib.md5()
     md5_obj.update(str(mm).encode('utf-8'))
     passwd = md5_obj.hexdigest()
+    num = db.session.query(Detail_t).count()
+    nnum = Detail_t.query.filter(Detail_t.classid==xid).count()
+    person =db.session.query(User).count()
+    newperson =User.query.order_by(-User.uid).first()
+    n_time=str(datetime.datetime.now()).split(' ')[0]
+    ttime=0
+    detail=Detail_t.query.filter(Detail_t.classid==xid).all()
+    if len(detail):
+        for d in detail:
+            if str(d.addtime) ==n_time:
+                ttime=ttime+1
 
+    banzhu = User.query.filter(User.uid==5).first()
+
+
+    allBK = Category.query.filter(Category.parentid == 0).all()
 
     if passwd:
         if len(user)!=0:
+            localname=user[0].username
+            global allownum
+            # allowlogin[localname] = allownum
+            last=str(user[0].lasttime).split(' ')[0]
+            if user[0].allowlogin == 1:
+                return render_template('notice3.html', **{
+                    'allBk': allBK
+                })
             if user[0].password==passwd:
+                allownum=0
+                allowlogin[localname]=allownum
+                if last!=n_time:
+                    user[0].grade=user[0].grade+2
+                    db.session.add(user[0])
+                    db.session.commit()
                 session['username'] = name
-                if session['username']:
-                    user = User.query.filter(User.username == session['username']).first()
-                    session['picture'] = user.picture
-                else :
-                    session['picture'] ='index/images/avatar_blank.gif'
+                session['picture'] = user[0].picture
+                session['grade'] = user[0].grade
+                session['udertype'] =user[0].udertype
+                user[0].lasttime =datetime.datetime.now()
+                db.session.add(user[0])
+                db.session.commit()
+            else:
+                if allowlogin.get(localname):
+                    allownum+=1
+                    allowlogin[localname]=allownum
+                else:
+                    allownum=1
+                    allowlogin[localname]=allownum
+                a=user[0].regip
+                print(a,type(a))
+                if allownum==3:
+                    c = Closeip(
+                        ip=a,
+                        addtime=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                    )
+                    db.session.add(c)
+                    db.session.commit()
+                    user[0].allowlogin=1
+                    db.session.add(user[0])
+                    db.session.commit()
+
+
+
 
     post=Detail_t.query.all()
     user1=User.query.all()
+
 
     if xid == 0:
         if cid == 0:
@@ -43,21 +110,27 @@ def index (cid=0,xid=0):
         else:
             bz = Category.query.filter(Category.cid == cid).all()
         # 所有大版块
-        allBk = Category.query.filter(Category.parentid == 0).all()
+        # allBk = Category.query.filter(Category.parentid == 0).all()
         # 小版块
         smallbz = Category.query.filter(Category.parentid != 0).all()
         return render_template('index.html', **{
             'category': bz,
-            'allBk': allBk,
+            'allBk': allBK,
             'smalls': smallbz,
             'iid':cid,
             'id':xid,
             'ppost':post,
-            'user1':user1
+            'user1':user1,
+            'num':num,
+            'person':person,
+            'newperson':newperson,
+            'nnum':nnum,
+            'ttime':ttime,
+            'banzhu':banzhu
         })
     else :
 
-        allBK = Category.query.filter(Category.parentid == 0).all()
+        # allBK = Category.query.filter(Category.parentid == 0).all()
         smallbz = Category.query.filter(Category.parentid != 0).all()
         BK = Category.query.filter(Category.parentid == cid).all() #allBK
         data = Category.query.filter(Category.cid==xid).all()
@@ -79,8 +152,15 @@ def index (cid=0,xid=0):
             'id':xid,
             'li':list,
             'ppost': post,
-            'user1':user1
+            'user1':user1,
+            'num':num,
+            'person':person,
+            'newperson':newperson,
+            'nnum':nnum,
+            'ttime':ttime,
+            'banzhu':banzhu
         })
+
 
 @bbs.route('/quit')
 def quit():
@@ -89,6 +169,7 @@ def quit():
 
 @bbs.route('/yzm')
 def yzm():
+
     vc= VerfiCode()
     res = vc.output()
     session['yzm']=vc.code
@@ -148,20 +229,17 @@ def yanzheng():
         user.username=name
         user.password=passwd
         user.email=email
-        user.regtime= time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time()))
-        user.lasttime = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
+        user.udertype=0
+        user.grade=50
+        user.regtime= datetime.datetime.now()
+        user.lasttime = datetime.datetime.now()
+        user.picture = "index/images/avatar_blank.gif"
         user.regip= str(ip)
         user.allowlogin = 0
         db.session.add(user)
         db.session.commit()
     session['zhuce']=1
-    # for n in range(length):
-    #     print(list[n])
-    # # print(yzm)
-    # # print(yz)
-    # # print(mm)
-    # # print(mn)
-    # print(length)
+
 
     allBK = Category.query.filter(Category.parentid == 0).all()
     return render_template('notice.html',**{
@@ -209,27 +287,7 @@ def reyanzheng():
         'num':n,
         'allBk': allBK
     })
-    # list=[]
-    # n=0
-    # length=len(list)
-    # if len(na)!=0:
-    #    if na[0].email == str(email):
-    #        if yz==yzm:
-    #            n=1
-    #            list.append('您的密码已经发送到您的邮箱，请及时查看。')
-    #        else:
-    #            list.append("验证码错误")
-    #    else:
-    #         list.append('邮箱输入错误')
-    # else:
-    #     list.append('无此用户')
-    # for n in range(n):
-    #     print(list[n])
-    # return render_template('notice1.html',**{
-    #     'li':list,
-    #     'num':n,
-    #     'len':length
-    # })
+
 
 @bbs.route('/sset/<ss>',methods=['GET','POST'])
 def sset(ss=''):
@@ -252,7 +310,7 @@ def sset(ss=''):
                 db.session.add(user)
                 db.session.commit()
                 # return "上传成功"
-
+                session['picture'] = user.picture
                 return render_template('sset.html', picture=user.picture,**{
                     'allBk': allBK
                 })
@@ -353,15 +411,18 @@ def rereyanzheng():
 def fatie(cid,xid):
     # cid 大板块id
     # xid 小板块id
-    allBK = Category.query.filter(Category.parentid == 0).all()
-    dbk = Category.query.filter(Category.cid == cid).first()
-    xbk = Category.query.filter(Category.cid == xid).first()
+    if session.get('username'):
+        allBK = Category.query.filter(Category.parentid == 0).all()
+        dbk = Category.query.filter(Category.cid == cid).first()
+        xbk = Category.query.filter(Category.cid == xid).first()
 
-    return render_template('fatie.html',**{
-        'allBk': allBK,
-        'dbk':dbk,
-        'xbk':xbk
-                })
+        return render_template('fatie.html',**{
+            'allBk': allBK,
+            'dbk':dbk,
+            'xbk':xbk
+                    })
+    else:
+        return redirect('/')
 @bbs.route('/p_post/<int:cid>/<int:xid>',methods=['GET','POST'])
 def p_post(cid,xid):
     allBK = Category.query.filter(Category.parentid == 0).all()
@@ -376,12 +437,20 @@ def p_post(cid,xid):
         content=content,
         addtime=time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())).split(' ')[0],
         addip=user.regip,
-        classid=xbk.cid
+        classid=xbk.cid,
+        replycount=0,
+        hits=0,
+        isdel=0,
+        ishot=0
     )
+    user.grade=user.grade+2
+    session['grade']=session['grade']+2
+    db.session.add(user)
+    db.session.commit()
     db.session.add(d)
     db.session.commit()
     dd=Detail_t.query.order_by(-Detail_t.id).first().id
-    return redirect('/tiezi/{}/{}/{}'.format(dbk.cid,xbk.cid,dd))
+    return redirect('/huitie/{}/{}/{}'.format(dbk.cid,xbk.cid,dd))
     # return render_template('tiezi.html',**{
     #     'allBk': allBK,
     #     'dbk':dbk,
@@ -389,20 +458,76 @@ def p_post(cid,xid):
     #     'dd':dd
     #             })
     # return redirect('/fatie/{}/{}'.format(dbk.cid,xbk.cid)) #改成帖子内部
+#
+# @bbs.route('/tiezi/<int:cid>/<int:xid>/<int:id>')
+# def tiezi(cid,xid,id):
+#     # cid:大板块id
+#     # xid:小板块id
+#     # id:帖子id
+#     allBK = Category.query.filter(Category.parentid == 0).all()
+#     dbk = Category.query.filter(Category.cid == cid).first()
+#     xbk = Category.query.filter(Category.cid == xid).first()
+#     # tie = Detail_t.query.filter(Detail_t.id == id).first()
+#     # user = User.query.filter(User.uid==tie.authorid).first()
+#     return redirect('/huitie/')
+#     return render_template('tiezi.html',**{
+#         'allBk': allBK,
+#         'dbk':dbk,
+#         'xbk':xbk
+#         # 'tie':tie,
+#         # 'user':user
+#                 })
 
-@bbs.route('/tiezi/<int:cid>/<int:xid>/<int:id>')
-def tiezi(cid,xid,id):
-    # cid:大板块id
-    # xid:小板块id
-    # id:帖子id
-    allBK = Category.query.filter(Category.parentid == 0).all()
-    dbk = Category.query.filter(Category.cid == cid).first()
-    xbk = Category.query.filter(Category.cid == xid).first()
-    tie = Detail_t.query.filter(Detail_t.id == id).first()
+@bbs.route('/huitie/<int:cid>/<int:xid>/<int:id>',methods=['GET','POST'])
+def huitie(cid,xid,id,pingid=0):
 
-    return render_template('tiezi.html',**{
-        'allBk': allBK,
-        'dbk':dbk,
-        'xbk':xbk,
-        'tie':tie
-                })
+    if session.get('username'):
+
+        allBK = Category.query.filter(Category.parentid == 0).all()
+        dbk = Category.query.filter(Category.cid == cid).first()
+        xbk = Category.query.filter(Category.cid == xid).first()
+        tie = Detail_t.query.filter(Detail_t.id == id).first()
+        #当前回帖的帖子id 所属的板块id
+        user = User.query.filter(User.username==session['username']).first()
+        #回帖人
+
+        reply = request.form.get('message')
+        if reply:
+            if tie.replycount+1:
+                tie.replycount=int( tie.replycount)+1
+                d=Detail_h(
+                    tid =id,
+                    authorid=user.uid,
+                    content=reply,
+                    addtime=time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())),
+                    isdisplay=0
+                )
+
+                db.session.add(d)
+                db.session.commit()
+
+
+        louid = Detail_t.query.filter(Detail_t.id==id).first()
+        louzhu=User.query.filter(User.uid==louid.authorid).first()
+
+        # huifu=Detail_h.query.all()
+        tie.hits = tie.hits+1
+        db.session.add(tie)
+        db.session.commit()
+
+        dd = Detail_h.query.filter(Detail_h.tid==id).all()
+        uuser =User.query.all()
+
+        return render_template('tiezi.html',**{
+            'allBk': allBK,
+            'dbk':dbk,
+            'xbk':xbk,
+            'tie':tie,
+            'dd':dd,
+            'user':louzhu,
+            'uuser':uuser
+                    })
+    else:
+        return redirect('/')
+
+
